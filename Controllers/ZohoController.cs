@@ -10,6 +10,7 @@ namespace RestAPIDemo.Controllers
     [ApiController]
     public class ZohoController : Controller
     {
+        //Definimos una variable para obtener los valores del archivo "appsettings.json"
         private IConfiguration _configuration;
         public ZohoController(IConfiguration iConfiguration) 
         { 
@@ -25,7 +26,7 @@ namespace RestAPIDemo.Controllers
         {
             try
             {
-                //Creamos un objeto de sql
+                //Creamos un objeto de SqlConnectionStringBuilder
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 //Asignamos el nombre del servidor
                 builder.DataSource = _configuration.GetValue<String>("ServerBD");
@@ -35,58 +36,29 @@ namespace RestAPIDemo.Controllers
                 builder.Password = _configuration.GetValue<String>("BDContraseña");
                 //Asignamos a que base nos vamos a conectar
                 builder.InitialCatalog = _configuration.GetValue<String>("BDConexion");
-
+                //Creamos un objeto de SqlConnection
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
+                    //Escribimos en consola
                     Console.WriteLine("\nQuery data example:");
                     Console.WriteLine("=========================================\n"); connection.Open();
+                    //Escibimos los query que vamos a necesitar
                     //String sql = "SELECT * from tlbBitacora";
                     String query = "INSERT INTO tlbBitacora (Nombre,Fecha) VALUES (@Nombre,@FechaRegistro)";
+                    //Ejecutamos la query
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        /* using (SqlDataReader reader = command.ExecuteReader()) 
-                         { 
-                             while (reader.Read()) 
-                             { 
-                                 Console.WriteLine("{0} {1}", reader.GetInt32(0), reader.GetString(1)); 
-                             } 
-                         } */
-
+                        //Hacemos la relación entre los datos mandadados y los que se almacenarán en la base
                         command.Parameters.AddWithValue("@Nombre", oModel.Nombre);
                         command.Parameters.AddWithValue("@FechaRegistro", oModel.FechaRegistro);
-
+                        //Revisamos que no haya error
                         int result = command.ExecuteNonQuery();
-
                         // Check Error
                         if (result < 0)
                             Console.WriteLine("Error inserting data into Database!");
-
                     }
-
-
-                    /*String query = "INSERT INTO dbo.SMS_PW (id,username,password,email) VALUES (@id,@username,@password, @email)";
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@id", "abc");
-                        command.Parameters.AddWithValue("@username", "abc");
-                        command.Parameters.AddWithValue("@password", "abc");
-                        command.Parameters.AddWithValue("@email", "abc");
-
-
-
-                        connection.Open();
-                        int result = command.ExecuteNonQuery();
-
-
-
-                        // Check Error
-                        if (result < 0)
-                            Console.WriteLine("Error inserting data into Database!");
-                    }*/
-
-
-
                 }
+                //Regresamos lo que nos llegó
                 return Ok(oModel);
             }
             catch (Exception ex) 
