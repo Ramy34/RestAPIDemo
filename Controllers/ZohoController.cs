@@ -33,7 +33,7 @@ namespace RestAPIDemo.Controllers
                 //Asignamos el nombre de usuario a la base
                 builder.UserID = _configuration.GetValue<String>("BDUsuario");
                 //Asignamos la contraseña 
-                builder.Password = _configuration.GetValue<String>("BDContraseña");
+                builder.Password = _configuration.GetValue<String>("BDContrasena");
                 //Asignamos a que base nos vamos a conectar
                 builder.InitialCatalog = _configuration.GetValue<String>("BDConexion");
                 //Creamos un objeto de SqlConnection
