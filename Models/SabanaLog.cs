@@ -1,8 +1,8 @@
-﻿namespace RestAPIDemo.Models
+﻿using System.Data.Entity;
+namespace RestAPIDemo.Models
 {
     public class SabanaLog
     {
-
         public string IDLinea { get; set; }
 
         public string Evento { get; set; }
@@ -21,7 +21,7 @@
 
         public string Fase { get; set; }
 
-        public DateTime Fecha { get; set; }
+        public string Fecha { get; set; }
 
         public Int32 SecuenciaGeneral { get; set; }
 
@@ -41,5 +41,16 @@
 
         public string UsuarioCreator { get; set; }
 
+        public string? Secret { get; set; }
+
+    }
+
+    public class LogDBContext: DbContext
+    {
+        public LogDBContext()
+        {
+
+        }
+        public DbSet<SabanaLog> oModel { get; set; }
     }
 }
